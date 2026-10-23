@@ -298,6 +298,150 @@ Llama 3.1 provides additional natural-language analysis, including summarization
 
 Streamlit provides an interactive interface for presenting historical analytics and demonstrating machine-learning predictions.
 
+## 4. Installation and Usage
+
+### 4.1 Public Streamlit Application
+
+The public application can be accessed without installing Python or downloading the repository.
+
+**Live Application:** https://customerticketanalysismltool-bjfmpqwqdgbgud3gyrlh4e.streamlit.app/
+
+The public version includes:
+- Historical customer-support analytics.
+- Interactive dashboard filters, metrics, and visualizations.
+- Traditional ML ticket classification using TF-IDF and Logistic Regression.
+- Ticket description input validation.
+
+Llama 3.1 analysis is not available in the public deployment.
+
+### 4.2 Requirements for Local Installation
+
+To run the application locally, you need:
+
+- Python 3.12 (the version used during local development).
+- Git.
+- A terminal or command-line interface.
+- The Python packages listed in `requirements.txt`.
+- Ollama and the Llama 3.1 model (optional, for local LLM analysis).
+
+### 4.3 Clone the Repository
+
+Open a terminal and run:
+
+```bash
+git clone https://github.com/Vdeoliv2/Customer_Ticket_Analysis_ML_tool.git
+cd Customer_Ticket_Analysis_ML_tool
+```
+
+### 4.4 Create a Virtual Environment
+
+On Windows:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+If Python 3.12 is not installed, install it before creating the environment.
+
+### 4.5 Install Python Dependencies
+
+Run:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+This installs the Python packages required by the application.
+
+### 4.6 Run the Application Without Llama 3.1
+
+In PowerShell, run:
+
+```powershell
+$env:LLM_ENABLED = "false"
+python -m streamlit run app.py
+```
+
+Streamlit will start a local web server and display a URL, usually:
+
+http://localhost:8501
+
+Open that address in your browser.
+
+With Llama 3.1 disabled, you can use the historical dashboard and traditional ML classifier.
+
+### 4.7 Optional — Enable Local Llama 3.1 Analysis
+
+To enable LLM features, install Ollama:
+
+https://ollama.com/
+
+After installing Ollama, download the Llama 3.1 model:
+
+```bash
+ollama pull llama3.1
+```
+
+Make sure Ollama is running.
+
+In PowerShell, enable the LLM:
+
+```powershell
+$env:LLM_ENABLED = "true"
+python -m streamlit run app.py
+```
+
+The local application can then use Llama 3.1 to generate ticket summaries, categories, sentiment assessments, and urgency assessments.
+
+The local version can also compare traditional ML and LLM classifications.
+
+**Note:** The first Llama 3.1 download may take time and requires sufficient storage and system resources.
+
+### 4.8 How to Use the Application
+
+**Historical Dashboard**
+
+1. Open the application.
+2. Navigate to the Support Dashboard.
+3. Select the desired Ticket Type and Ticket Priority filters.
+4. Review ticket metrics and visualizations.
+5. Inspect the filtered ticket details.
+
+**AI Ticket Analyzer**
+
+1. Navigate to the AI Ticket Analyzer.
+2. Enter a customer-support ticket description.
+3. Click **Analyze Ticket**.
+4. Review the traditional ML prediction.
+5. If running locally with Ollama enabled, review the additional Llama 3.1 analysis.
+
+### 4.9 Troubleshooting
+
+**Missing Python package**
+
+Ensure the virtual environment is activated, then run:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+**Streamlit does not start**
+
+Verify that the terminal is inside the repository folder and that `app.py` exists.
+
+**Ollama connection error**
+
+Confirm that Ollama is installed, running, and has the `llama3.1` model available.
+
+**LLM features are not visible**
+
+Check whether the `LLM_ENABLED` environment variable is set to `true`, then restart Streamlit.
+
+**Incorrect ML prediction**
+
+The classifier is experimental and may misclassify tickets. An incorrect prediction does not necessarily indicate an application installation problem.
+
 **Separate processing and analysis modules**
 
 The project separates data processing, machine-learning classification, LLM analysis, and user-interface logic into different Python modules to improve organization and maintainability.
