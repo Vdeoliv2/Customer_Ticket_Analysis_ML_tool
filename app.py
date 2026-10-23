@@ -2,7 +2,6 @@ from src.data_processing import load_data, validate_data
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-import joblib
 from src.ai_analyzer import analyze_ticket
 from src.classifier import train_classifier, classify_ticket
 import os
@@ -491,12 +490,6 @@ elif page == "AI Ticket Analyzer":
                 vectorizer, model = train_classifier(
                     DATA_PATH
                 )
-
-                joblib.dump(vectorizer,"models/vectorizer.joblib")
-                joblib.dump(model, "models/classifier.joblib")
-
-                vectorizer = joblib.load("models/vectorizer.joblib")
-                model = joblib.load("models/classifier.joblib")
 
                 ml_prediction = classify_ticket(
                     ticket_description,
