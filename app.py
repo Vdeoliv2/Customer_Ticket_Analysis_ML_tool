@@ -483,6 +483,7 @@ elif page == "AI Ticket Analyzer":
 
             try:
 
+                
                 # ----------------------------------
                 # Traditional ML prediction
                 # ----------------------------------
@@ -492,77 +493,78 @@ elif page == "AI Ticket Analyzer":
                 )
 
                 ml_prediction = classify_ticket(
-                    ticket_description,
+                    cleaned_description,
                     vectorizer,
                     model
                 )
 
+                # Always show the traditional ML result
+                st.subheader("Traditional ML Classification")
+
+                st.metric(
+                    "Predicted Ticket Type",
+                    ml_prediction
+                )
 
                 # ----------------------------------
-                # LLM analysis
+                # Optional LLM analysis
                 # ----------------------------------
 
-                with st.spinner(
-                    "Analyzing ticket..."
-                ):
+                if LLM_ENABLED:
 
-                    analysis = analyze_ticket(
-                        ticket_description
+                    with st.spinner(
+                        "Analyzing ticket with Llama 3.1..."
+                    ):
+                        analysis = analyze_ticket(
+                            cleaned_description
+                        )
+
+                    st.subheader("Llama 3.1 Analysis")
+
+                    st.write(
+                        "**Summary:**",
+                        analysis["Summary"]
                     )
 
-
-                # ----------------------------------
-                # AI analysis results
-                # ----------------------------------
-
-                st.subheader(
-                    "AI Analysis"
-                )
-
-                st.write(
-                    "**Summary:**",
-                    analysis["Summary"]
-                )
-
-                st.write(
-                    "**Category:**",
-                    analysis["Category"]
-                )
-
-                st.write(
-                    "**Sentiment:**",
-                    analysis["Sentiment"]
-                )
-
-                st.write(
-                    "**Urgency:**",
-                    analysis["Urgency"]
-                )
-
-
-                # ----------------------------------
-                # Classification comparison
-                # ----------------------------------
-
-                st.subheader(
-                    "Classification Comparison"
-                )
-
-                col1, col2 = st.columns(2)
-
-                with col1:
-
-                    st.metric(
-                        "Traditional ML",
-                        ml_prediction
-                    )
-
-                with col2:
-
-                    st.metric(
-                        "Llama 3.1",
+                    st.write(
+                        "**Category:**",
                         analysis["Category"]
                     )
+
+                    st.write(
+                        "**Sentiment:**",
+                        analysis["Sentiment"]
+                    )
+
+                    st.write(
+                        "**Urgency:**",
+                        analysis["Urgency"]
+                    )
+
+                    # Compare ML and LLM classifications
+                    st.subheader("Classification Comparison")
+
+                    col1, col2 = st.columns(2)
+
+                    with col1:
+                        st.metric(
+                            "Traditional ML",
+                            ml_prediction
+                        )
+
+                    with col2:
+                        st.metric(
+                            "Llama 3.1",
+                            analysis["Category"]
+                        )
+
+                else:
+
+                    st.info(
+                        "Llama 3.1 analysis is available "
+                        "in the local version of this project only."
+                    )
+
 
 
             except Exception as error:
