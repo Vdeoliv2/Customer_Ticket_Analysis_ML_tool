@@ -1,5 +1,13 @@
 # AI-Powered Customer Support Analytics
 
+**[Live Streamlit Demo](https://customerticketanalysismltool-bjfmpqwqdgbgud3gyrlh4e.streamlit.app/)** | **[GitHub Source Code](https://github.com/Vdeoliv2/Customer_Ticket_Analysis_ML_tool)**
+
+> The public application includes the historical dashboard and TF-IDF/Logistic Regression ticket classifier. Llama 3.1 analysis requires local Ollama.
+
+![Support Dashboard](https://github.com/user-attachments/assets/17108cb9-65b4-48a6-904a-23b12651466c)
+
+![AI Ticket Analyzer](https://github.com/user-attachments/assets/9ccb195d-1d3d-49a3-a3d4-c2207c4f4591)
+
 ## 1. Project Overview
 
 This project is a customer-support analytics system developed using Python, Pandas, scikit-learn, Streamlit, and Llama 3.1.
@@ -142,44 +150,34 @@ The project uses a hybrid deployment approach to demonstrate traditional machine
 | Streamlit | Building the interactive web application |
 | Ollama | Running the Llama 3.1 model locally |
 | Llama 3.1 | Generating summaries and analyzing category, sentiment, and urgency |
-| Joblib | Loading serialized machine-learning artifacts |
 | GitHub | Source-code hosting and version control |
 | Streamlit Community Cloud | Hosting the public web application |
 | Jupyter Notebook | Data exploration, experimentation, and model evaluation |
 
 ### 3.2 System Architecture
 
-The system has two primary workflows:
+The application has two main functions, with an optional local LLM branch:
 
 1. Historical customer-support analytics.
-2. New ticket classification and AI analysis.
+2. New ticket classification using traditional ML.
+3. Optional local Llama 3.1 analysis.
 
 #### Workflow A — Historical Customer Support Analytics
 
 ```text
-Historical Customer Support Dataset
-                |
-                v
-       Python and Pandas
-                |
-                v
-    Data Cleaning and Processing
-                |
-                v
-       Structured Ticket Data
-                |
-       +--------+--------+
-       |                 |
-       v                 v
-  SQLite / SQL      Excel Analysis
-       |                 |
-       +--------+--------+
-                |
-                v
+Historical Support Tickets (CSV)
+              |
+              v
+       Python / Pandas
+              |
+              v
        Streamlit Dashboard
-                |
-                v
-   Filters, KPIs, Charts, Tables
+              |
+              v
+    Filters, KPIs, Charts, Tables
+
+Separate project analysis: SQLite / SQL and Excel
+(these do not feed the live Streamlit dashboard)
 ```
 
 This workflow prepares historical customer-support data and makes it available for analysis.
@@ -214,7 +212,7 @@ This workflow uses traditional machine learning to classify newly submitted cust
 
 The TF-IDF vectorizer converts text into numerical features, and Logistic Regression predicts the most likely ticket category.
 
-The public deployment uses saved machine-learning artifacts so the classifier can perform inference without retraining the model for every prediction.
+The application trains the TF-IDF vectorizer and Logistic Regression classifier from the historical ticket dataset at runtime and uses the fitted components to predict new ticket categories. It does not require saved Joblib model artifacts.
 
 #### Workflow C — Local Llama 3.1 Analysis
 
@@ -298,7 +296,18 @@ Llama 3.1 provides additional natural-language analysis, including summarization
 
 Streamlit provides an interactive interface for presenting historical analytics and demonstrating machine-learning predictions.
 
+**Separate processing and analysis modules**
+
+The project separates data processing, machine-learning classification, LLM analysis, and user-interface logic into different Python modules to improve organization and maintainability.
+
+---
+
 ## 4. Installation and Usage
+
+**Local setup verification (October 23, 2026):** Python 3.12 virtual environment, dependency installation, local Streamlit startup, and traditional ML classification were demonstrated. The optional Ollama workflow was not retested as part of this verification.
+
+The application was launched successfully at `http://localhost:8501` using a Python 3.12 virtual environment. The AI Ticket Analyzer accepted a refund-related description, returned the traditional ML category **Billing Inquiry**, and displayed the expected message indicating that Llama 3.1 analysis was disabled. These checks confirm the tested local ML workflow; optional Ollama functionality was not retested as part of this verification.
+
 
 ### 4.1 Public Streamlit Application
 
@@ -339,7 +348,7 @@ On Windows:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe --version
 ```
 
 If Python 3.12 is not installed, install it before creating the environment.
@@ -349,7 +358,7 @@ If Python 3.12 is not installed, install it before creating the environment.
 Run:
 
 ```bash
-python -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 This installs the Python packages required by the application.
@@ -360,7 +369,7 @@ In PowerShell, run:
 
 ```powershell
 $env:LLM_ENABLED = "false"
-python -m streamlit run app.py
+.\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
 Streamlit will start a local web server and display a URL, usually:
@@ -389,7 +398,7 @@ In PowerShell, enable the LLM:
 
 ```powershell
 $env:LLM_ENABLED = "true"
-python -m streamlit run app.py
+.\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
 The local application can then use Llama 3.1 to generate ticket summaries, categories, sentiment assessments, and urgency assessments.
@@ -420,10 +429,10 @@ The local version can also compare traditional ML and LLM classifications.
 
 **Missing Python package**
 
-Ensure the virtual environment is activated, then run:
+From the repository directory, run:
 
 ```bash
-python -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 **Streamlit does not start**
@@ -442,6 +451,82 @@ Check whether the `LLM_ENABLED` environment variable is set to `true`, then rest
 
 The classifier is experimental and may misclassify tickets. An incorrect prediction does not necessarily indicate an application installation problem.
 
-**Separate processing and analysis modules**
 
-The project separates data processing, machine-learning classification, LLM analysis, and user-interface logic into different Python modules to improve organization and maintainability.
+---
+
+## 5. Model Evaluation and Limitations
+
+### 5.1 Evaluation Approach
+
+The project explores ticket categorization with a traditional TF-IDF and Logistic Regression classifier and a locally hosted Llama 3.1 model. The results below come from previously recorded experiments. The project is a learning and portfolio demonstration, not a production-ready support automation service.
+
+### 5.2 Recorded Results
+
+| Evaluation | Result |
+|---|---:|
+| Traditional ML held-out test accuracy | 19.48% |
+| Tickets in the separate manual comparison | 25 |
+| Traditional ML matches in manual comparison | 14/25 (56%) |
+| Llama 3.1 matches in manual comparison | 4/25 (16%) |
+
+The traditional ML evaluation used an approximately 80/20 train/test split. The **19.48% held-out test accuracy** and the **56% match rate on a separate 25-ticket sample** were obtained under different evaluation conditions and should not be compared as equivalent measures. The small comparison does not establish general superiority of either model.
+
+The Llama 3.1 comparison evaluates category matches only; it does not independently measure the quality of generated summaries, sentiment labels, or urgency labels.
+
+### 5.3 Example Application Test
+
+During local testing on October 23, 2026, the input `I am issues with refunding` returned **Billing Inquiry**. This confirmed that the application accepted text and produced a prediction, but one plausible prediction does not demonstrate reliable accuracy.
+
+### 5.4 Known Limitations
+
+- **Low classification accuracy:** The recorded held-out test accuracy of 19.48% is not sufficient for dependable automatic categorization.
+- **Small comparison sample:** The 25-ticket comparison is limited and may not represent real-world ticket distributions.
+- **Ambiguous labels and ticket descriptions:** Overlapping issues and limited context may affect both approaches.
+- **Local-only LLM:** Summarization, sentiment, urgency, and LLM category analysis require a running Ollama server and are not available in the public deployment.
+- **No live ticket-system integration:** The app uses historical data and manually entered descriptions.
+- **Runtime model training:** The current implementation trains its TF-IDF and Logistic Regression components when processing a valid ticket rather than loading persisted model artifacts, which can add latency.
+
+### 5.5 Potential Improvements
+
+- Review label quality, class distribution, and text preprocessing.
+- Compare alternative models and use cross-validation and per-class precision, recall, and F1-score.
+- Evaluate the LLM on a larger, consistently labeled sample.
+- Assess summary, sentiment, and urgency quality independently.
+- Cache or persist fitted ML components to avoid repeated training.
+- Add human review for uncertain classifications and consider live support-system integration.
+
+### 5.6 Evaluation Conclusion
+
+The project demonstrates data preparation, model training, evaluation, interactive analytics, local LLM experimentation, and public deployment. Its main contribution is an end-to-end implementation with transparent limitations, not production-grade predictive accuracy.
+
+---
+
+## 6. Application Screenshots
+
+The screenshots at the top of this README show the **Support Dashboard** and **AI Ticket Analyzer**. They illustrate the historical analytics interface and traditional ML ticket-classification workflow.
+
+The public deployment does not run Ollama or Llama 3.1. Screenshots are from the application and are included as visual evidence, not as proof of classification accuracy.
+
+## 7. Live Demo and Source Code
+
+- **[Launch the public Streamlit application](https://customerticketanalysismltool-bjfmpqwqdgbgud3gyrlh4e.streamlit.app/)** — explore the dashboard and submit a ticket for traditional ML classification.
+- **[View the GitHub repository](https://github.com/Vdeoliv2/Customer_Ticket_Analysis_ML_tool)** — inspect the source code, documentation, and project files.
+
+**Deployment scope:** The public application provides dashboard analytics and traditional ML classification. Llama 3.1 summarization, category, sentiment, and urgency analysis are available only when running locally with Ollama.
+
+## 8. Project Conclusion
+
+The AI-Powered Customer Support Analytics project demonstrates an end-to-end portfolio workflow that combines historical ticket analysis, an interactive Streamlit dashboard, traditional machine-learning classification, optional local Llama 3.1 experimentation, testing, and public deployment.
+
+The recorded TF-IDF and Logistic Regression held-out test accuracy was **19.48%**. This limits the reliability of automatic classification and makes the application a learning and portfolio demonstration rather than a production-ready support service. The separate 25-ticket comparison is described in Section 5 and should not be treated as an equivalent accuracy test.
+
+### Future Improvements
+
+- Investigate data quality, class distribution, and overlapping ticket categories.
+- Evaluate additional classifiers with cross-validation, precision, recall, and F1-score.
+- Test Llama 3.1 on a larger, consistently labeled evaluation set.
+- Assess summary, sentiment, and urgency quality independently.
+- Cache or persist trained model components to reduce runtime training overhead.
+- Explore integration with real ticket-management systems, with appropriate data protection.
+
+**Portfolio outcome:** A publicly accessible analytics and ML demonstration, with optional local LLM features and clearly documented performance and deployment limitations.
